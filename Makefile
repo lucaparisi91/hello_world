@@ -9,14 +9,13 @@ MF=	Makefile-archer2
 # module load cray-netcdf-hdf5parallel
 #
 
+CXX?=CXX
+PREFIX?=${PWD}
 
-CC:=	CC
-CPPFLAGS:=
-LFLAGS:=
+EXE:=	hello
 
-EXE=	hello
 
-SRC= \
+SRC:= \
 	hello.cpp
 
 
@@ -24,16 +23,23 @@ SRC= \
 # No need to edit below this line
 #
 
-OBJ=	$(SRC:.cpp=.o)
 
-all:	$(EXE)
+OBJ:=	$(SRC:.cpp=.o)
 
-%.o : %.cpp
-		$(CC) -c $(CPPFLAGS) $< -o $@
 
 $(EXE):	$(OBJ)
-	$(CC) -o $@ $(OBJ) $(LFLAGS)
+	$(CXX) -o $@ $(OBJ) $(LFLAGS)
+
+
+%.o : %.cpp
+		$(CXX) -c $(CPPFLAGS) $< -o $@
 
 
 clean:
 	rm -f $(OBJ) $(EXE)
+
+install: $(EXE)
+	@echo "Installing..."
+	mkdir -p $(PREFIX)
+	mkdir -p $(PREFIX)/bin
+	cp $(EXE) $(PREFIX)/bin
