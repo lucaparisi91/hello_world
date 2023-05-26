@@ -9,6 +9,8 @@ MF=	Makefile-archer2
 # module load cray-netcdf-hdf5parallel
 #
 
+MPI ?= FALSE
+
 CXX?=CXX
 PREFIX?=${PWD}
 
@@ -23,16 +25,22 @@ SRC:= \
 # No need to edit below this line
 #
 
-
 OBJ:=	$(SRC:.cpp=.o)
 
-
 $(EXE):	$(OBJ)
-	$(CXX) -o $@ $(OBJ) $(LFLAGS)
+		$(CXX) -o $@ $(OBJ) $(LFLAGS)
 
 
+ifeq ($(MPI), TRUE)
 %.o : %.cpp
-		$(CXX) -c $(CPPFLAGS) $< -o $@
+			$(CXX) -c $(CPPFLAGS) -DMPI $< -o $@
+else 
+%.o : %.cpp
+			$(CXX) -c $(CPPFLAGS) $< -o $@
+
+
+endif
+
 
 
 clean:
